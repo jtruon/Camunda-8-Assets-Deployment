@@ -1,64 +1,1 @@
-name: Camunda 8 Workflow Deploy
-
-on:
-  push:
-    branches: [ main ]
-    paths:
-      - "bpmn/**"
-      - "dmn/**"
-      - "forms/**"
-      - ".github/workflows/camunda-deploy.yml"
-  workflow_dispatch: {}
-
-jobs:
-  deploy-workflows:
-    runs-on: ubuntu-latest
-
-    env:
-      # Non-sensitive repo variables
-      ENVIRONMENT: ${{ vars.ENVIRONMENT }}       # e.g. camunda-rock-dev
-      CLUSTER_NAME: ${{ vars.CLUSTER_NAME }}     # e.g. camunda-rock-dev
-      REGION: ${{ vars.REGION }}                 # e.g. us-central
-
-      # Camunda auth config from secrets
-      CAMUNDA_BASE_URL: ${{ secrets.CAMUNDA_BASE_URL }}
-      CAMUNDA_AUTH_STRATEGY: OAUTH
-      CAMUNDA_CLIENT_ID: ${{ secrets.CAMUNDA_CLIENT_ID }}
-      CAMUNDA_CLIENT_SECRET: ${{ secrets.CAMUNDA_CLIENT_SECRET }}
-      CAMUNDA_OAUTH_URL: ${{ secrets.CAMUNDA_OAUTH_URL }}
-      CAMUNDA_TOKEN_AUDIENCE: orchestration-api
-
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22.x"
-
-      # Trust your mkcert CA (if provided)
-      - name: Install mkcert CA
-        if: ${{ secrets.CAMUNDA_CA_CERT_PEM != '' }}
-        run: |
-          echo "${{ secrets.CAMUNDA_CA_CERT_PEM }}" > ca.pem
-
-      - name: Install c8ctl CLI
-        run: npm install -g @camunda8/cli
-
-      - name: Deploy all workflows with c8ctl
-        env:
-          # If ca.pem exists, Node will use it; if not, this is harmless
-          NODE_EXTRA_CA_CERTS: ${{ github.workspace }}/ca.pem
-          CAMUNDA_BASE_URL: ${{ env.CAMUNDA_BASE_URL }}
-          CAMUNDA_AUTH_STRATEGY: ${{ env.CAMUNDA_AUTH_STRATEGY }}
-          CAMUNDA_CLIENT_ID: ${{ env.CAMUNDA_CLIENT_ID }}
-          CAMUNDA_CLIENT_SECRET: ${{ env.CAMUNDA_CLIENT_SECRET }}
-          CAMUNDA_OAUTH_URL: ${{ env.CAMUNDA_OAUTH_URL }}
-          CAMUNDA_TOKEN_AUDIENCE: ${{ env.CAMUNDA_TOKEN_AUDIENCE }}
-          ENVIRONMENT: ${{ env.ENVIRONMENT }}
-          CLUSTER_NAME: ${{ env.CLUSTER_NAME }}
-          REGION: ${{ env.REGION }}
-        run: |
-          echo "Deploying to environment=${ENVIRONMENT}, cluster=${CLUSTER_NAME}, region=${REGION}"
-          c8ctl deploy bpmn dmn forms
+name: Camunda 8 Workflow Deployon:  push:    branches: [ main ]    paths:      - "bpmn/**"      - "dmn/**"      - "forms/**"      - ".github/workflows/deploy-bpmn.yaml"  workflow_dispatch: {}jobs:  deploy-workflows:    runs-on: ubuntu-latest    env:      # Non-sensitive repo variables      ENVIRONMENT: ${{ vars.ENVIRONMENT }}       # e.g. camunda-rock-dev      CLUSTER_NAME: ${{ vars.CLUSTER_NAME }}     # e.g. camunda-rock-dev      REGION: ${{ vars.REGION }}                 # e.g. us-central      # Camunda auth config from secrets      CAMUNDA_BASE_URL: ${{ secrets.CAMUNDA_BASE_URL }}      CAMUNDA_AUTH_STRATEGY: OAUTH      CAMUNDA_CLIENT_ID: ${{ secrets.CAMUNDA_CLIENT_ID }}      CAMUNDA_CLIENT_SECRET: ${{ secrets.CAMUNDA_CLIENT_SECRET }}      CAMUNDA_OAUTH_URL: ${{ secrets.CAMUNDA_OAUTH_URL }}      CAMUNDA_TOKEN_AUDIENCE: orchestration-api    steps:      - name: Checkout repo        uses: actions/checkout@v4      - name: Set up Node.js        uses: actions/setup-node@v4        with:          node-version: "22.x"      # Always write ca.pem (empty if secret not set); Node will ignore an invalid/empty CA file      - name: Install mkcert CA        run: |          echo "${{ secrets.CAMUNDA_CA_CERT_PEM }}" > ca.pem      - name: Install c8ctl CLI        run: npm install -g @camunda8/cli      - name: Deploy all workflows with c8ctl        env:          NODE_EXTRA_CA_CERTS: ${{ github.workspace }}/ca.pem          CAMUNDA_BASE_URL: ${{ env.CAMUNDA_BASE_URL }}          CAMUNDA_AUTH_STRATEGY: ${{ env.CAMUNDA_AUTH_STRATEGY }}          CAMUNDA_CLIENT_ID: ${{ env.CAMUNDA_CLIENT_ID }}          CAMUNDA_CLIENT_SECRET: ${{ env.CAMUNDA_CLIENT_SECRET }}          CAMUNDA_OAUTH_URL: ${{ env.CAMUNDA_OAUTH_URL }}          CAMUNDA_TOKEN_AUDIENCE: ${{ env.CAMUNDA_TOKEN_AUDIENCE }}          ENVIRONMENT: ${{ env.ENVIRONMENT }}          CLUSTER_NAME: ${{ env.CLUSTER_NAME }}          REGION: ${{ env.REGION }}        run: |          echo "Deploying to environment=${ENVIRONMENT}, cluster=${CLUSTER_NAME}, region=${REGION}"          c8ctl deploy bpmn dmn forms
