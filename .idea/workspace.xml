@@ -45,7 +45,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "issue-with-dns",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/joey.truong/Documents/GitHub/Camunda-8-Assets-Deployment",
@@ -74,7 +74,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1773938947887</updated>
-      <workItem from="1773938949027" duration="9941000" />
+      <workItem from="1773938949027" duration="12619000" />
     </task>
     <servers />
   </component>
