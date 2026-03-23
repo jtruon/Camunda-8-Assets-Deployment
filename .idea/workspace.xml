@@ -5,7 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b7156c24-fc8f-4874-8ce0-1c56d40218d4" name="Changes" comment="ini">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/_camunda-deploy-dev.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/_camunda-deploy-dev.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bpmn/Order Process.bpmn" beforeDir="false" afterPath="$PROJECT_DIR$/bpmn/Order Process.bpmn" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
