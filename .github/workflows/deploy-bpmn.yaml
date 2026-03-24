@@ -1,1 +1,51 @@
-name: Camunda 8 Workflow Deployon:  push:    branches:      - '**'                      # run on all branches; adjust if you want only main    paths:      - 'bpmn/**'      - 'dmn/**'      - 'forms/**'      - '.github/workflows/deploy-bpmn.yaml'  workflow_dispatch: {}jobs:  deploy-workflows:    # This makes the job run on your Mac self-hosted runner    runs-on: [self-hosted, camunda-rock-dev]    env:      # Non-sensitive repo variables      ENVIRONMENT: ${{ vars.ENVIRONMENT }}       # e.g. camunda-rock-dev      CLUSTER_NAME: ${{ vars.CLUSTER_NAME }}     # e.g. camunda-rock-dev      REGION: ${{ vars.REGION }}                 # e.g. us-central      # Camunda auth config from secrets      CAMUNDA_BASE_URL: ${{ secrets.CAMUNDA_BASE_URL }}     # e.g. https://camunda.example.com      CAMUNDA_AUTH_STRATEGY: OAUTH      CAMUNDA_CLIENT_ID: ${{ secrets.CAMUNDA_CLIENT_ID }}   # c8ctl      CAMUNDA_CLIENT_SECRET: ${{ secrets.CAMUNDA_CLIENT_SECRET }}      CAMUNDA_OAUTH_URL: ${{ secrets.CAMUNDA_OAUTH_URL }}   # Keycloak token URL      CAMUNDA_TOKEN_AUDIENCE: orchestration-api    steps:      - name: Checkout repo        uses: actions/checkout@v4      - name: Set up Node.js        uses: actions/setup-node@v4        with:          node-version: '22.x'      - name: Install c8ctl CLI        run: npm install -g @camunda8/cli      - name: Deploy all workflows with c8ctl        run: |          echo "Deploying to environment=${ENVIRONMENT}, cluster=${CLUSTER_NAME}, region=${REGION}"          # Trust your local mkcert CA for Node/c8ctl          export NODE_EXTRA_CA_CERTS="$(mkcert -CAROOT)/rootCA.pem"          # Deploy all BPMN/DMN/forms          c8ctl deploy bpmn dmn forms
+name: Camunda 8 Workflow Deploy
+
+on:
+#  push:
+#    branches:
+#      - '**'                      # run on all branches; adjust if you want only main
+#    paths:
+#      - 'bpmn/**'
+#      - 'dmn/**'
+#      - 'forms/**'
+#      - '.github/workflows/deploy-bpmn.yaml'
+  workflow_dispatch: {}
+
+jobs:
+  deploy-workflows:
+    # This makes the job run on your Mac self-hosted runner
+    runs-on: [self-hosted, camunda-rock-dev]
+
+    env:
+      # Non-sensitive repo variables
+      ENVIRONMENT: ${{ vars.ENVIRONMENT }}       # e.g. camunda-rock-dev
+      CLUSTER_NAME: ${{ vars.CLUSTER_NAME }}     # e.g. camunda-rock-dev
+      REGION: ${{ vars.REGION }}                 # e.g. us-central
+
+      # Camunda auth config from secrets
+      CAMUNDA_BASE_URL: ${{ secrets.CAMUNDA_BASE_URL }}     # e.g. https://camunda.example.com
+      CAMUNDA_AUTH_STRATEGY: OAUTH
+      CAMUNDA_CLIENT_ID: ${{ secrets.CAMUNDA_CLIENT_ID }}   # c8ctl
+      CAMUNDA_CLIENT_SECRET: ${{ secrets.CAMUNDA_CLIENT_SECRET }}
+      CAMUNDA_OAUTH_URL: ${{ secrets.CAMUNDA_OAUTH_URL }}   # Keycloak token URL
+      CAMUNDA_TOKEN_AUDIENCE: orchestration-api
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+
+      - name: Install c8ctl CLI
+        run: npm install -g @camunda8/cli
+
+      - name: Deploy all workflows with c8ctl
+        run: |
+          echo "Deploying to environment=${ENVIRONMENT}, cluster=${CLUSTER_NAME}, region=${REGION}"
+          # Trust your local mkcert CA for Node/c8ctl
+          export NODE_EXTRA_CA_CERTS="$(mkcert -CAROOT)/rootCA.pem"
+          # Deploy all BPMN/DMN/forms
+          c8ctl deploy bpmn dmn forms
