@@ -66,6 +66,6 @@ jobs:
           echo "Deploying to environment=${ENVIRONMENT}"
           echo "CAMUNDA_BASE_URL=${CAMUNDA_BASE_URL}"
           # OPTIONAL: Trust local mkcert CA so Node/c8ctl accepts your TLS cert (Uncomment for self-host github runner)
-          # export NODE_EXTRA_CA_CERTS="$(mkcert -CAROOT)/rootCA.pem"
+          export NODE_EXTRA_CA_CERTS="$(mkcert -CAROOT)/rootCA.pem"
           # Deploy all configured resource paths (e.g. bpmn dmn forms)
           c8ctl deploy ${RESOURCE_PATHS}
