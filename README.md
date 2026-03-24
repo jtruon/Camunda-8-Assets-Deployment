@@ -29,7 +29,6 @@ DEV_CAMUNDA_BASE_URL =  https://camunda.example.com
 ```
 
 > Note: If you use a self-signed / local certificate (e.g. mkcert) you may need additional configuration in your runner; see the optional note in the workflow section below.
-
 ---
 
 ## 1. Workflows Overview
@@ -173,7 +172,6 @@ You should now see the runner **online** under
 ---
 
 ## 3. Getting the API Key and Secret (clientId / clientSecret)
-
 The `CAMUNDA_CLIENT_ID` and `CAMUNDA_CLIENT_SECRET` used by `c8ctl` are OAuth client credentials from Camunda 8, *not* from `c8ctl` itself.
 
 For **Self-Managed** with Identity, there are two main steps:
@@ -193,6 +191,7 @@ For **Self-Managed** with Identity, there are two main steps:
     - Copy the **Client Secret** → this will be your `CAMUNDA_CLIENT_SECRET`.
 
 These are your “API key and secret” for CI/CD.
+![managementidentity-m2m-client](solution/Screenshot%202026-03-24%20at%203.07.33%E2%80%AFPM.png)
 
 ### 3.2. Grant API permissions for Orchestration
 
@@ -221,8 +220,8 @@ Now switch to **Orchestration Identity**:
     - Create a new role with the desired Orchestration permissions.
 5. Open the role → **Clients** tab → click **Assign client**.
 6. Enter the **Client ID** from step 3.1 (e.g. `c8ctl-dev`) and assign it.
-
 This links the OAuth client to the Orchestration permissions so tokens from that client can actually deploy BPMN, etc.
+   ![identity-client](solution/Screenshot%202026-03-24%20at%203.07.52%E2%80%AFPM.png)
 
 You now have:
 
@@ -238,7 +237,7 @@ Use those in your GitHub `DEV_CAMUNDA_CLIENT_ID` and `DEV_CAMUNDA_CLIENT_SECRET`
 
 Set these in:  
 **Repo → Settings → Secrets and variables → Actions**
-
+![github-secrets-variables.png](solution/Screenshot%202026-03-24%20at%203.02.44%E2%80%AFPM.png)
 For dev:
 
 - `DEV_CAMUNDA_BASE_URL`  
@@ -263,7 +262,6 @@ The caller workflow maps these to the secrets required by the reusable workflow.
 1. Ensure your self-hosted runner is running (`./run.sh`).
 2. In GitHub: **Actions → Camunda Deploy Dev**
 3. Click **Run workflow**, choose branch (e.g. `dev`), and run.
-
 You should see:
 
 - Job `deploy-dev` using `runs-on: self-hosted, dev` (if configured that way)
@@ -286,7 +284,7 @@ on:
       - ".github/workflows/camunda-deploy-dev.yaml"
 ```
 ---
-
+![jobrunner-dev.png](solution/Screenshot%202026-03-24%20at%203.02.03%E2%80%AFPM.png)
 ## 6. Extending to Stage / Prod
    To add another environment (e.g. stage):
 
